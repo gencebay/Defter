@@ -18,7 +18,9 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "rimraf": "^2.6.2",
-    "tslib": "^1.9.0"
+    "inversify": "4.9.0",
+    "tslib": "^1.9.0",
+    "reflect-metadata": "^0.1.10"
   },
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",
@@ -31,18 +33,23 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.1.9",
     "@types/jest": "^22.1.2",
     "@types/lodash": "4.14.102",
     "@types/node": "^9.4.5",
+    "@types/prop-types": "^15.5.2",
     "@types/react": "^16.0.36",
+    "@types/react-redux": "^5.0.14",
     "@types/react-dom": "^16.0.3",
+    "@uifabric/icons": "5.4.2",
     "@uifabric/styling": ">=5.17.0 <6.0.0",
     "@uifabric/utilities": ">=5.10.2 <6.0.0",
-    "@types/prop-types": "^15.5.2",
-    "prettier": "1.10.2",
+    "enzyme": "^3.3.0",
     "highlight.js": "^9.12.0",
-    "typescript": "^2.7.1",
+    "prettier": "1.10.2",
+    "react-addons-test-utils": "^15.6.2",
     "tslint": "5.9.1",
-    "tslint-react": "3.4.0"
+    "tslint-react": "3.4.0",
+    "typescript": "^2.7.1"
   }
 }
