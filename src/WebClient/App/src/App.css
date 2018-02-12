@@ -1,28 +1,129 @@
-.App {
-  text-align: center;
-}
+/*
+  Your use of the content in the files referenced here is subject to the terms of the license at http://aka.ms/fabric-assets-license
+*/
+/*
+    Common CSS property mixins with support for RTL.
+    Use these mixins when you want to automatically create RTL versions of your properties.
+    They are in alphabetical order (a-z).
+*/
+/* Base slots */
+/* Input controls */
+/* Buttons */
+/* Menus */
+/* Lists */
+/* Base slots */
+/* Input controls */
+/* Buttons */
+/* Menus */
+/* Lists */
+:global body {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 100%;
+  min-height: 100%;
+  -webkit-tap-highlight-color: transparent; }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
+:global .ms-App-header {
+  position: absolute;
+  top: 0;
+  height: 50px;
+  left: 0;
+  right: 0; }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
+:global .ms-App-nav {
+  position: absolute;
+  width: 300px;
+  top: 50px;
+  bottom: 0;
+  background: "[theme:white, default: #ffffff]";
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; }
+  [dir='ltr'] :global .ms-App-nav {
+    left: 0; }
+  [dir='rtl'] :global .ms-App-nav {
+    right: 0; }
+  html[dir="ltr"] :global .ms-App-nav {
+    border-right: 1px solid #EEE; }
+  html[dir="rtl"] :global .ms-App-nav {
+    border-left: 1px solid #EEE; }
 
-.App-title {
-  font-size: 1.5em;
-}
+:global .ms-App-content {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  /* Helps to enable hardware accelleration and improve painting performance. */
+  transform: translateZ(0);
+  /* Helps to enable smooth scrolling on ios devices. */
+  -webkit-overflow-scrolling: touch; }
+  [dir='ltr'] :global .ms-App-content {
+    left: 300px; }
+  [dir='rtl'] :global .ms-App-content {
+    right: 300px; }
+  [dir='ltr'] :global .ms-App-content {
+    right: 0; }
+  [dir='rtl'] :global .ms-App-content {
+    left: 0; }
 
-.App-intro {
-  font-size: large;
-}
+:global .ms-App--small .ms-App-content,
+:global .ms-App--medium .ms-App-content,
+:global .ms-App--large .ms-App-content {
+  padding: 5px; }
+  [dir='ltr'] :global .ms-App--small .ms-App-content, [dir='ltr']
+  :global .ms-App--medium .ms-App-content, [dir='ltr']
+  :global .ms-App--large .ms-App-content {
+    left: 0; }
+  [dir='rtl'] :global .ms-App--small .ms-App-content, [dir='rtl']
+  :global .ms-App--medium .ms-App-content, [dir='rtl']
+  :global .ms-App--large .ms-App-content {
+    right: 0; }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+:global .ms-App-nav .ms-Nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+
+:global .ms-Panel.ms-App-navPanel {
+  top: 50px; }
+  :global .ms-Panel.ms-App-navPanel .ms-Panel-contentInner {
+    padding: 0; }
+
+:global .Nav-linkFlair {
+  font-size: 10px;
+  text-transform: uppercase;
+  background: "[theme:neutralTertiaryAlt, default: #c8c8c8]";
+  color: "[theme:white, default: #ffffff]";
+  line-height: normal;
+  display: inline;
+  vertical-align: middle;
+  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  padding: 2px 6px;
+  border-radius: 2px; }
+  html[dir="ltr"] :global .Nav-linkFlair {
+    float: right; }
+  html[dir="rtl"] :global .Nav-linkFlair {
+    float: left; }
+  [dir='ltr'] :global .Nav-linkFlair {
+    right: 20px; }
+  [dir='rtl'] :global .Nav-linkFlair {
+    left: 20px; }
+
+:global .Nav-linkFlair.is-state1 {
+  background: "[theme:yellowLight, default: #fff100]";
+  color: "[theme:black, default: #000000]"; }
+
+:global .Nav-linkFlair.is-state2 {
+  background: "[theme:greenLight, default: #bad80a]"; }
+
+:global .Nav-linkFlair.is-state3 {
+  background: "[theme:green, default: #107c10]"; }
