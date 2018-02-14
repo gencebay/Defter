@@ -1,5 +1,5 @@
 import { ApiContract } from "./ApiContract";
-import { AlbumCategoryResult } from "../models/AlbumCategoryResult";
+import { AlbumCategoryResult } from "../Models/AlbumCategoryResult";
 import { ApiUtils } from "./ApiUtils";
 
 export class AlbumApi extends ApiContract {

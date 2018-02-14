@@ -1,12 +1,12 @@
 import { injectable, inject } from "inversify";
 import { Settings } from "./Settings";
-import { TYPES } from "../actions";
+import { TypeConstants } from "../Constants";
 
 @injectable()
 export class RoundRobinManager {
   public settings: Settings;
   public readonly regionMap: Map<string, string[]>;
-  public constructor(@inject(TYPES.Settings) settings: Settings) {
+  public constructor(@inject(TypeConstants.Settings) settings: Settings) {
     this.settings = settings;
 
     const regions = this.settings.apiRegionKeys;
@@ -28,7 +28,8 @@ export class RoundRobinManager {
     }
 
     throw Error("Url not found!");
-  }
+    // tslint:disable-next-line:semicolon
+  };
 
   public getAssetsUri = (): string => {
     const urls = this.regionMap.get("main");
@@ -38,5 +39,6 @@ export class RoundRobinManager {
     }
 
     throw Error("Url not found!");
-  }
+    // tslint:disable-next-line:semicolon
+  };
 }

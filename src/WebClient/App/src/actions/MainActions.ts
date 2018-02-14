@@ -2,11 +2,11 @@ import {
   MAIN_FETCH_START,
   MAIN_FETCH_SUCCESS,
   MAIN_FETCH_FAIL,
-  MAIN_ALBUM_SELECT,
-  Dispatch
+  MAIN_ALBUM_SELECT
 } from "./Types";
-import { Factory } from "../factory";
-import { Album } from '../models';
+import { Factory } from "../Factory";
+import { Album } from "../Models";
+import { Dispatch } from "../Constants";
 
 export const mainDataFetch = () => {
   const albumApi = Factory.createAlbumApi();
@@ -23,7 +23,7 @@ export const mainDataFetch = () => {
   };
 };
 
-export const onAlbumSelect = (album:Album) => {
+export const onAlbumSelect = (album: Album) => {
   return (dispatch: Dispatch) => {
     dispatch({ type: MAIN_ALBUM_SELECT, payload: album });
   };

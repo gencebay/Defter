@@ -2,11 +2,12 @@ import {
   MAIN_FETCH_START,
   MAIN_FETCH_SUCCESS,
   MAIN_FETCH_FAIL,
-  MAIN_ALBUM_SELECT,
-  Dispatcher
-} from "../actions";
+  MAIN_ALBUM_SELECT
+} from "../Actions";
 
-import { AlbumCategoryResult, Album } from "../models";
+import { Dispatcher } from "../Constants";
+
+import { AlbumCategoryResult, Album } from "../Models";
 
 interface InitialState {
   data: AlbumCategoryResult[];

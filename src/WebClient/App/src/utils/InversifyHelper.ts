@@ -1,6 +1,6 @@
 import { interfaces } from "inversify";
-import { ProxyHelper } from "../core/ProxyHelper";
-import { ApiContract } from "../api/";
+import { ProxyHelper } from "../Core/ProxyHelper";
+import { ApiContract } from "../Api/";
 
 export namespace InversifyHelper {
   export function RegisterApi<T extends ApiContract>(

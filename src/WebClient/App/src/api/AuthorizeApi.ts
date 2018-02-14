@@ -1,8 +1,11 @@
-import { OperationResult, OperationResultOfT } from "../models/OperationResult";
-import { LoginViewModel } from "../models/LoginViewModel";
-import { LoginResult } from "../models/LoginResult";
+import {
+  OperationResult,
+  OperationResultOfT,
+  LoginViewModel,
+  LoginResult
+} from "../Models";
 import { ApiContract } from "./ApiContract";
-import { httpMethod } from "../decorators/HttpMethodDecorators";
+import { httpMethod } from "../Decorators";
 import { ApiUtils } from "./ApiUtils";
 
 export class AuthorizeApi extends ApiContract {

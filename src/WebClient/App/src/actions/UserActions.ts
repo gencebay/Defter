@@ -1,14 +1,13 @@
-import { LoginResult, LoginViewModel } from "../models";
+import { LoginResult, LoginViewModel } from "../Models";
 import {
   LOGIN_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
-  LOGOUT_USER,
-  Dispatch,
-  DispatchOfT
-} from "../actions";
-import { Factory } from "../factory";
-import { TypeHelper, StorageHelper } from "../utils";
+  LOGOUT_USER
+} from "../Actions";
+import { Factory } from "../Factory";
+import { Dispatch, DispatchOfT } from "../Constants";
+import { TypeHelper, StorageHelper } from "../Utils";
 
 export function loginUser(username: string, password: string) {
   const model: LoginViewModel = {

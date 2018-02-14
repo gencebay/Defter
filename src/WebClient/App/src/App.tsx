@@ -9,7 +9,13 @@ import {
   ResponsiveMode
 } from "office-ui-fabric-react/lib/utilities/decorators/withResponsiveMode";
 import { INavLink, INavLinkGroup } from "office-ui-fabric-react/lib/Nav";
-import { Header } from "./components/Header/Header";
+
+import { initializeIcons } from "@uifabric/icons";
+
+// Register icons and pull the fonts from the default SharePoint cdn.
+initializeIcons();
+
+import { Header } from "./Components/Header/Header";
 import "./App.scss";
 
 export enum ExampleStatus {

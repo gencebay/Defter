@@ -1,4 +1,4 @@
-import { ApiContract } from "../api";
+import { ApiContract } from "../Api";
 
 export function apiRoute(routeTemplate: string, regionKey: string) {
   if (!routeTemplate) {

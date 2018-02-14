@@ -1,13 +1,13 @@
 import { injectable } from "inversify";
-import { GuidHelper } from "../utils";
+import { GuidHelper } from "../Utils";
 
-export interface HeaderProvider {
+interface HeaderProvider {
   guid: string;
   headers: Headers;
 }
 
 @injectable()
-export class DefaultHeaderProvider implements HeaderProvider {
+class DefaultHeaderProvider implements HeaderProvider {
   public guid: string;
   public headers: Headers;
   constructor() {
@@ -16,3 +16,5 @@ export class DefaultHeaderProvider implements HeaderProvider {
     this.headers.append("X-MyApp-Client", "1234567890abcdef");
   }
 }
+
+export { HeaderProvider, DefaultHeaderProvider };

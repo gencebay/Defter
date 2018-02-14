@@ -1,7 +1,7 @@
+import "reflect-metadata";
 import * as React from "react";
-import { createApp } from "./utils/CreateApp";
-import { examplesOf } from "./utils/Examples";
-import { ActivityItemBasicExample } from "./components";
+import { createApp, examplesOf } from "./Utils";
+import { ActivityItemBasicExample } from "./Components";
 
 createApp(
   [

@@ -1,9 +1,9 @@
 import { interfaces } from "inversify";
 import { ProxyInvoker } from "./ProxyInvoker";
-import { HeaderProvider } from "./HeaderProvider";
+import { HeaderProvider } from "./DefaultHeaderProvider";
 import { RoundRobinManager } from "./RoundRobinManager";
-import { TYPES } from "../actions";
-import { ApiContract } from "../api/ApiContract";
+import { TypeConstants } from "../Constants";
+import { ApiContract } from "../Api";
 
 export namespace ProxyHelper {
   export function createProxy<T extends ApiContract>(
@@ -12,9 +12,11 @@ export namespace ProxyHelper {
     resolver: interfaces.Container,
     serviceIdentifier: string | symbol
   ): T {
-    const headerProvider = resolver.get<HeaderProvider>(TYPES.HeaderProvider);
+    const headerProvider = resolver.get<HeaderProvider>(
+      TypeConstants.HeaderProvider
+    );
     const roundRobinManager = resolver.get<RoundRobinManager>(
-      TYPES.RoundRobinManager
+      TypeConstants.RoundRobinManager
     );
     const instance = new type();
 
@@ -22,12 +24,16 @@ export namespace ProxyHelper {
       let prop = Object.getOwnPropertyDescriptor(instance, key);
       if (prop !== undefined) {
         if (key !== "getType" && typeof prop.value === "function") {
-          const invoker = new ProxyInvoker(key, roundRobinManager, headerProvider);
+          const invoker = new ProxyInvoker(
+            key,
+            roundRobinManager,
+            headerProvider
+          );
           instance[key] = new Proxy(instance[key], invoker);
         }
       }
     });
-    
+
     return instance;
   }
 }

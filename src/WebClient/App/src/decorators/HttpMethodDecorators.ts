@@ -1,4 +1,4 @@
-import { HttpMethodDefinition } from "../models";
+import { HttpMethodDefinition } from "../Models";
 
 const httpMethodMetadataKey = Symbol("design:httpMethod");
 

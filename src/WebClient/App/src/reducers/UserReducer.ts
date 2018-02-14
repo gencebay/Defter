@@ -2,21 +2,22 @@ import {
   LOGIN_USER,
   LOGIN_USER_FAIL,
   LOGIN_USER_SUCCESS,
-  LOGOUT_USER,
-  Dispatcher
-} from "../actions";
+  LOGOUT_USER
+} from "../Actions";
+
+import { Dispatcher } from "../Constants";
+import { User } from "../Models";
 
 export interface InitialState {
   loading: boolean;
   error: null;
-  // tslint:disable-next-line:no-any;
-  currentUser: any;
+  currentUser: User;
 }
 
 const initialState: InitialState = {
   loading: false,
   error: null,
-  currentUser: null
+  currentUser: <User>{}
 };
 
 export default (state: InitialState = initialState, action: Dispatcher) => {

@@ -1,26 +1,29 @@
 import resolver from "./inversify.config";
-import { AuthorizeApi } from "./api";
-import { APIs, TYPES } from "./actions";
-import { ProxyHelper } from "./core/ProxyHelper";
-import { AlbumApi } from "./api/AlbumApi";
-import { RoundRobinManager } from "./core/RoundRobinManager";
+import { AuthorizeApi, AlbumApi } from "./Api";
+import { TypeConstants } from "./Constants";
+import { ApiConstants } from "./Constants";
+import { ProxyHelper, RoundRobinManager } from "./Core";
 
 export namespace Factory {
   export function createAuthorizeApi(): AuthorizeApi {
     return ProxyHelper.createProxy<AuthorizeApi>(
       AuthorizeApi,
       resolver,
-      APIs.AuthorizeApi
+      ApiConstants.AuthorizeApi
     );
   }
 
   export function createAlbumApi(): AlbumApi {
-    return ProxyHelper.createProxy<AlbumApi>(AlbumApi, resolver, APIs.AlbumApi);
+    return ProxyHelper.createProxy<AlbumApi>(
+      AlbumApi,
+      resolver,
+      ApiConstants.AlbumApi
+    );
   }
 
   export function getDefaultMainUrl(): string {
     const roundRobinManager = resolver.get<RoundRobinManager>(
-      TYPES.RoundRobinManager
+      TypeConstants.RoundRobinManager
     );
 
     return roundRobinManager.getAssetsUri();

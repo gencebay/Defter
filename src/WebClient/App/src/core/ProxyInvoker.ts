@@ -1,19 +1,19 @@
-import { HeaderProvider, RoundRobinManager } from "../Core";
+import { DefaultHeaderProvider, RoundRobinManager } from "../Core";
 import { injectable } from "inversify";
-import { getMethodDefinition } from "../decorators";
-import { ApiContract } from "../api";
-import { ObjectHelper } from "../utils/ObjectHelper";
-import { HttpMethodDefinition } from "../models";
+import { getMethodDefinition } from "../Decorators";
+import { ApiContract } from "../Api";
+import { ObjectHelper } from "../Utils/ObjectHelper";
+import { HttpMethodDefinition } from "../Models";
 
 @injectable()
 class ProxyInvoker {
   public key: string;
   public roundRobinManager: RoundRobinManager;
-  public headerProvider: HeaderProvider;
+  public headerProvider: DefaultHeaderProvider;
   public constructor(
     key: string,
     roundRobinManager: RoundRobinManager,
-    headerProvider: HeaderProvider
+    headerProvider: DefaultHeaderProvider
   ) {
     this.key = key;
     this.roundRobinManager = roundRobinManager;
@@ -55,9 +55,12 @@ class ProxyInvoker {
         requestInit.body = JSON.stringify(values);
       } else {
         const formData: FormData = new FormData();
-        argArray.forEach(element => {
+        // tslint:disable-next-line:no-any
+        argArray.forEach((element: any) => {
           for (var key in element) {
-            formData.append(key, element[key]);
+            if (element[key]) {
+              formData.append(key, element[key]);
+            }
           }
         });
         requestInit.body = formData;
@@ -65,7 +68,8 @@ class ProxyInvoker {
     } else {
       const paramNames = ObjectHelper.getParamNames(target);
       const argsObj = {};
-      paramNames.forEach((value, index) => {
+      // tslint:disable-next-line:no-any
+      paramNames.forEach((value: any, index: number) => {
         argsObj[value] = values[index];
       });
       const queryString = ObjectHelper.toQueryString(argsObj);
@@ -104,6 +108,7 @@ class ProxyInvoker {
 
     const requestPath = `${url}${route}/${methodName}`;
     return requestPath;
+    // tslint:disable-next-line:semicolon
   };
 }
 

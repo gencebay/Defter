@@ -1,4 +1,5 @@
 export * from "./AlbumCategoryResult";
+export * from "./User";
 export * from "./LoginResult";
 export * from "./LoginViewModel";
 export * from "./OperationResult";

@@ -1,6 +1,8 @@
 import { injectable, inject } from "inversify";
 import { HeaderProvider } from "./DefaultHeaderProvider";
-import { TYPES } from "../actions";
+import { TypeConstants } from "../Constants";
+
+console.log("TYPES:", TypeConstants);
 
 export interface RestClient {
   headerProvider: HeaderProvider;
@@ -10,7 +12,7 @@ export interface RestClient {
 export class DefaultRestClient {
   public headerProvider: HeaderProvider;
   public constructor(
-    @inject(TYPES.HeaderProvider) headerProvider: HeaderProvider
+    @inject(TypeConstants.HeaderProvider) headerProvider: HeaderProvider
   ) {
     this.headerProvider = headerProvider;
   }

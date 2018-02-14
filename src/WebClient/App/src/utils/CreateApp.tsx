@@ -15,7 +15,7 @@ import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import ReduxThunk from "redux-thunk";
-import reducers from "../reducers";
+import reducers from "../Reducers";
 
 import { ExampleGroup, IExample } from "./Examples";
 
