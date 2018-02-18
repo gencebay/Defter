@@ -1,18 +1,42 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebClient</title>
-    <base href="~/" />
-
-    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
+    <title>Defter UI</title>
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://cdn.netcorestack.com/css/efe-all-2.0.10.min.css" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <script src="http://cdn.netcorestack.com/js/bundle.min.js"></script>
+    <script src="http://cdn.netcorestack.com/js/efe-all-2.0.10.min.js"></script>
+    <script>
+        efe.context = {
+            culture: "@Html.Culture()",
+            title: "Defter"
+        }
+    </script>
 </head>
 <body>
-    @RenderBody()
-
-    <script src="~/dist/vendor.js" asp-append-version="true"></script>
+    <div class="container-wrapper">
+        <div class="sidebar">
+            <div class="icon-bar">
+                <a class="active" href="/" title="Dashboard">
+                    <i data-feather="home" class="blue"></i>
+                </a>
+                <a href="#"><i data-feather="hard-drive" class="teal"></i></a>
+                <a href="#"><i data-feather="inbox" class="deep-purple"></i></a>
+                <a href="#"><i data-feather="pie-chart" class="red"></i></a>
+            </div>
+        </div>
+        <div class="page-content">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/js/feather.min.js"></script>
+    <script>
+        feather.replace();
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,125 @@
+﻿/* lato-regular - latin */
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/lato-v14-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Lato Regular'), local('Lato-Regular'), url('../fonts/lato-v14-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../fonts/lato-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+    url('../fonts/lato-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
+    url('../fonts/lato-v14-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('../fonts/lato-v14-latin-regular.svg#Lato') format('svg'); /* Legacy iOS */
+}
+/* lato-700 - latin */
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/lato-v14-latin-700.eot'); /* IE9 Compat Modes */
+    src: local('Lato Bold'), local('Lato-Bold'), url('../fonts/lato-v14-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../fonts/lato-v14-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+    url('../fonts/lato-v14-latin-700.woff') format('woff'), /* Modern Browsers */
+    url('../fonts/lato-v14-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('../fonts/lato-v14-latin-700.svg#Lato') format('svg'); /* Legacy iOS */
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #fafafc;
+}
+
+.container-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.sidebar {
+    display: flex;
+    min-width: 60px;
+    max-width: 60px;
+    min-height: 100vh;
+}
+
+.page-content {
+    display:flex;
+    min-height: 100vh;
+    min-width: 100vh;
+    padding: 10px 15px 0px;
+    flex:1;
+}
+
+.page-content > div {
+    flex:1;
+}
+
+.blue {
+    color: #2196f3 !important;
+}
+
+.brown {
+    color:#795548  !important;
+}
+
+.deep-orange {
+    color:#ff5722  !important;
+}
+
+.deep-purple {
+    color: #673ab7 !important;
+}
+
+.pink {
+    color: #e91e63 !important;
+}
+
+.indigo {
+    color: #3f51b5 !important;
+}
+
+.red {
+    color: #f44336 !important;
+}
+
+.teal {
+    color: #009688 !important;
+}
+
+.icon-bar {
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+.icon-bar a {
+    display: block; /* Make the links appear below each other instead of side-by-side */
+    text-align: center; /* Center-align text */
+    padding: 14px; /* Add some padding */
+    transition: all 0.3s ease; /* Add transition for hover effects */
+    color: white; /* White text color */
+    font-size: 18px; /* Increased font-size */
+}
+
+.icon-bar a:hover {
+    background-color: #fafafc;
+}
+
+/*.active {
+    background-color: #f2f2f6;
+}*/
+
+.dt-toolbar-footer {
+    border-top:inherit;
+    background:inherit;
+}
+
+.bd {
+    border: 1px solid rgba(0,0,0,.0625) !important;
+}
+
+.p-20 {
+    padding: 20px !important;
+}
+
+.defter-box {
+    background-color: #fff !important;
+}

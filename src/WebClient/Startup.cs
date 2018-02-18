@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetCoreStack.Mvc;
 
 namespace WebClient
 {
@@ -18,6 +18,8 @@ namespace WebClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddNetCoreStackMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -33,15 +35,7 @@ namespace WebClient
 
             app.UseStaticFiles();
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "App";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

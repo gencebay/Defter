@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using Defter.SharedLibrary;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreStack.Contracts;
+using NetCoreStack.Mvc.Extensions;
+using System.Collections.Generic;
 
 namespace WebClient.Controllers
 {
@@ -14,10 +13,9 @@ namespace WebClient.Controllers
             return View();
         }
 
-        public IActionResult Error()
+        public IActionResult GetMessages(CollectionRequest request)
         {
-            ViewData["RequestId"] = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            return View();
+            return Json(new List<DefterGenericMessage> { }.ToCollectionResult(request));
         }
     }
 }

@@ -1,17 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <title>React App</title>
-    <link href="/static/css/main.29266132.css" rel="stylesheet">
-</head>
-<body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <script type="text/javascript" src="/static/js/main.5cc9d15a.js"></script>
-</body>
-</html>
+﻿<div>
+    <div>
+        <i style="float:left;" data-feather="activity" class="pink"></i>
+        <h3 class="brown">Activities</h3>
+    </div>
+    <div class="bd defter-box">
+        @{
+            var gridComponent = Html.Efe().Grid<DefterGenericMessage>()
+            .Name("messagesGrid")
+            .DataSource(source => source.Ajax().Read("GetMessages", "Home"))
+            .Events(events => events.Init("gridInitHandler").CreatedRow("rowCreatedHandler"))
+            .PageLength(PageLengths.TwentyFive)
+            .BindableColumns(columns =>
+            {
+                columns.Bind(x => x.RequestId);
+                columns.Bind(x => x.Name);
+                columns.Bind(x => x.OperationName);
+                columns.TemplateColumn("Select", "btnGridSelectRow");
+            });
+
+            gridComponent.FilterPanel("filterModal", "Filtre Uygula");
+            gridComponent.Render();
+        }
+    </div>
+</div>
+
+<script>
+
+    efe.subscribe(efe.events.propertyChanged, function (sender, context) {
+
+    });
+
+    function autoCompleteChanged(e) {
+        // console.log("Auto Complete Changed :", e);
+    }
+
+    function rowCreatedHandler(row, data, index) {
+        return;
+    }
+
+    var gridInitHandler = function (e, settings, json) {
+    }
+
+</script>
