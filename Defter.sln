@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Defter.Api.Hosting", "src\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfServer", "test\WcfServer\WcfServer.csproj", "{359B5ACC-27D8-4997-A72B-081B304D65EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wcf.Contracts", "Wcf.Contracts\Wcf.Contracts.csproj", "{F0CC9453-8505-40E6-B6C4-038271F22DCC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wcf.Contracts", "test\Wcf.Contracts\Wcf.Contracts.csproj", "{F0CC9453-8505-40E6-B6C4-038271F22DCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

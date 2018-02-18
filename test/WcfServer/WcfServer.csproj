@@ -178,12 +178,6 @@
     <Compile Include="Types\SharedConstants.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Wcf.Contracts\Wcf.Contracts.csproj">
-      <Project>{f0cc9453-8505-40e6-b6c4-038271f22dcc}</Project>
-      <Name>Wcf.Contracts</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -191,6 +185,12 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wcf.Contracts\Wcf.Contracts.csproj">
+      <Project>{f0cc9453-8505-40e6-b6c4-038271f22dcc}</Project>
+      <Name>Wcf.Contracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
