@@ -8,23 +8,6 @@ namespace Wcf.Contracts
     {
         [OperationContract]
         [FaultContract(typeof(ServiceException))]
-        ServiceResult<int> ReturnPrimitive();
-
-        [OperationContract]
-        [FaultContract(typeof(ServiceException))]
-        [MethodLog]
-        ServiceResult<int> LoggedServiceMethod(CompositeType parameter);
-
-        [OperationContract]
-        [FaultContract(typeof(ServiceException))]
-        ServiceResult<CompositeType> RefTypeParameter(CompositeType model);
-
-        [OperationContract]
-        [FaultContract(typeof(ServiceException))]
-        ServiceResult ThrowException();
-
-        [OperationContract]
-        [FaultContract(typeof(ServiceException))]
-        ServiceResult ThrowContractRuleException(long requiredParam);
+        ServiceResult SomeQuery(string value);
     }
 }

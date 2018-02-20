@@ -18,7 +18,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
-    <PackageReference Include="NetCoreStack.Data" Version="2.0.10" />
+    <PackageReference Include="NetCoreStack.Data" Version="2.0.11" />
+    <PackageReference Include="NetCoreStack.Jobs" Version="2.0.0" />
+    <PackageReference Include="NetCoreStack.WebSockets" Version="2.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.2.0" />
   </ItemGroup>
 
@@ -28,10 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Defter.SharedLibrary\Defter.SharedLibrary.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Core\" />
   </ItemGroup>
 
 </Project>

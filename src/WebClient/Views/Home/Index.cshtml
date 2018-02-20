@@ -26,13 +26,36 @@
 
 <script>
 
-    efe.subscribe(efe.events.propertyChanged, function (sender, context) {
+    $(function () {
+        'use strict';
 
+        var connectionId = Cookies.get("connectionId");
+        var connectorName = "@Environment.MachineName";
+        var containerId = "connectionContainer";
+        var scheme = document.location.protocol == "https:" ? "wss" : "ws";
+        var port = document.location.port ? (":" + document.location.port) : "";
+        var socket;
+
+        var WebSocketCommands = {
+            Connect: 1,
+            DataSend: 2,
+            Handshake: 4,
+            All: 7
+        }
+
+        var state = {
+            connect: "Connect",
+            connecting: "Connecting...",
+            connected: "Connected"
+        }
+
+        var ViewModel = function () {
+            
+        };
+
+        var instance = new ViewModel();
+        ko.applyBindings(instance, document.getElementById(containerId));
     });
-
-    function autoCompleteChanged(e) {
-        // console.log("Auto Complete Changed :", e);
-    }
 
     function rowCreatedHandler(row, data, index) {
         return;

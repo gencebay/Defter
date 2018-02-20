@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Defter.SharedLibrary
+﻿namespace Defter.SharedLibrary
 {
     public class ApiResult
     {

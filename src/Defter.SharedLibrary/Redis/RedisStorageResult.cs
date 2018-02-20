@@ -1,8 +1,8 @@
 ﻿namespace Defter.SharedLibrary
 {
-    public class StorageResult
+    public class RedisStorageResult
     {
         public string Type { get; set; }
-        public object Data { get; set; }
+        public string Data { get; set; }
     }
 }

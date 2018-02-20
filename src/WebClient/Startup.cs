@@ -1,8 +1,12 @@
+using Defter.SharedLibrary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetCoreStack.Mvc;
+using NetCoreStack.Proxy;
+using NetCoreStack.WebSockets;
+using WebClient.Core;
 
 namespace WebClient
 {
@@ -19,6 +23,14 @@ namespace WebClient
         {
             services.AddMvc();
 
+            services.AddNetCoreProxy(Configuration, options =>
+            {
+                // Register the API to use as a Proxy
+                options.Register<IDefterApi>();
+            });
+
+            services.AddNativeWebSockets<WebSocketDataStream>();
+
             services.AddNetCoreStackMvc();
         }
 
@@ -34,6 +46,8 @@ namespace WebClient
             }
 
             app.UseStaticFiles();
+
+            app.UseNativeWebSockets();
 
             app.UseMvcWithDefaultRoute();
         }

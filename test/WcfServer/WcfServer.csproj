@@ -140,7 +140,7 @@
     <Compile Include="Core\StartupMethods.cs" />
     <Compile Include="Extensions\ServiceCollectionExtension.cs" />
     <Compile Include="Factory.cs" />
-    <Compile Include="GuidelineService.cs" />
+    <Compile Include="Services\GuidelineService.cs" />
     <Compile Include="Infrastructure\BasicAuthServiceHostFactory.cs" />
     <Compile Include="Infrastructure\BasicHttpServiceHostFactory.cs" />
     <Compile Include="Infrastructure\BasicHttpsServiceHostFactory.cs" />
