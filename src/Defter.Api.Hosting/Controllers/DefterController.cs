@@ -8,25 +8,27 @@ namespace Defter.Api.Hosting.Controllers
     [Route("api/[controller]")]
     public class DefterController : ControllerBase, IDefterApi
     {
+        private readonly LogManager _logManager;
         private readonly IConnectionManager _connectionManager;
 
-        public DefterController(IConnectionManager connectionManager)
+        public DefterController(LogManager logManager, IConnectionManager connectionManager)
         {
+            _logManager = logManager;
             _connectionManager = connectionManager;
         }
 
-        [HttpPost(nameof(GenericCapture))]
-        public async Task<ApiResult> GenericCapture([FromBody]DefterGenericMessage model)
+        [HttpPost(nameof(Yaz))]
+        public async Task<ApiResult> Yaz([FromBody]DefterGenericMessage model)
         {
-            if (ModelState.IsValid)
+            if (model == null)
             {
-
+                return new ApiResult();
             }
 
+            _logManager.SaveLog(model.ConvertToDefterLog());
             var webSocketContext = new WebSocketMessageContext { Command = WebSocketCommands.DataSend, Value = model };
             await _connectionManager.BroadcastAsync(webSocketContext);
 
-            await Task.CompletedTask;
             return new ApiResult();
         }
     }

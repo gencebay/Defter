@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 namespace Defter.SharedLibrary
 {
     [ApiRoute("api/[controller]", "main")]
-    public interface IDefterApi : IApiContract
+    public interface IDiscoveryApi : IApiContract
     {
+        Task<ApiResult> GetConnections();
+
         [HttpPostMarker]
-        Task<ApiResult> Yaz(DefterGenericMessage model);
+        Task<ApiResult> BroadcastAsync(BroadcastContext context);
     }
 }

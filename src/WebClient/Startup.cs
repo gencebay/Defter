@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetCoreStack.Mvc;
 using NetCoreStack.Proxy;
 using NetCoreStack.WebSockets;
+using NetCoreStack.WebSockets.ProxyClient;
 using WebClient.Core;
 
 namespace WebClient
@@ -29,9 +30,14 @@ namespace WebClient
                 options.Register<IDefterApi>();
             });
 
-            services.AddNativeWebSockets<WebSocketDataStream>();
+            services.AddNativeWebSockets<ServerWebSocketDataStream>();
 
             services.AddNetCoreStackMvc();
+
+            services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
+
+            services.AddProxyWebSockets()
+                .Register<ProxyWebSocketDataStream, DefaultClientInvocatorContextFactory>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -50,6 +56,8 @@ namespace WebClient
             app.UseNativeWebSockets();
 
             app.UseMvcWithDefaultRoute();
+
+            app.UseProxyWebSockets();
         }
     }
 }

@@ -42,27 +42,27 @@ body {
 }
 
 .page-content {
-    display:flex;
+    display: flex;
     min-height: 100vh;
     min-width: 100vh;
     padding: 10px 15px 0px;
-    flex:1;
+    flex: 1;
 }
 
-.page-content > div {
-    flex:1;
-}
+    .page-content > div {
+        flex: 1;
+    }
 
 .blue {
     color: #2196f3 !important;
 }
 
 .brown {
-    color:#795548  !important;
+    color: #795548 !important;
 }
 
 .deep-orange {
-    color:#ff5722  !important;
+    color: #ff5722 !important;
 }
 
 .deep-purple {
@@ -90,26 +90,26 @@ body {
     min-height: 100vh;
 }
 
-.icon-bar a {
-    display: block; /* Make the links appear below each other instead of side-by-side */
-    text-align: center; /* Center-align text */
-    padding: 14px; /* Add some padding */
-    transition: all 0.3s ease; /* Add transition for hover effects */
-    color: white; /* White text color */
-    font-size: 18px; /* Increased font-size */
-}
+    .icon-bar a {
+        display: block; /* Make the links appear below each other instead of side-by-side */
+        text-align: center; /* Center-align text */
+        padding: 14px; /* Add some padding */
+        transition: all 0.3s ease; /* Add transition for hover effects */
+        color: white; /* White text color */
+        font-size: 18px; /* Increased font-size */
+    }
 
-.icon-bar a:hover {
-    background-color: #fafafc;
-}
+        .icon-bar a:hover {
+            background-color: #fafafc;
+        }
 
 /*.active {
     background-color: #f2f2f6;
 }*/
 
 .dt-toolbar-footer {
-    border-top:inherit;
-    background:inherit;
+    border-top: inherit;
+    background: inherit;
 }
 
 .bd {
@@ -122,4 +122,66 @@ body {
 
 .defter-box {
     background-color: #fff !important;
+}
+
+.table-bordered {
+    border-left: none;
+    border-right: none;
+}
+
+    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+        border-bottom-width: 0px;
+    }
+
+.dataTables_empty {
+    color: #795548 !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: inherit;
+}
+
+.pulse {
+    float: left;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 0 rgba(229, 58, 115, 0.5);
+    animation: pulse 10s 4s infinite;
+}
+
+.pulse:hover {
+    animation: none;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(229, 58, 115, 0.4);
+    }
+
+    10% {
+        -webkit-box-shadow: 0 0 0 10px rgba(229, 58, 115, 0);
+    }
+
+    20% {
+        -webkit-box-shadow: 0 0 0 0 rgba(229, 58, 115, 0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(229, 58, 115, 0.4);
+        box-shadow: 0 0 0 0 rgba(229, 58, 115, 0.4);
+    }
+
+    10% {
+        -moz-box-shadow: 0 0 0 10px rgba(229, 58, 115, 0);
+        box-shadow: 0 0 0 10px rgba(229, 58, 115, 0);
+    }
+
+    20% {
+        -moz-box-shadow: 0 0 0 0 rgba(229, 58, 115, 0);
+        box-shadow: 0 0 0 0 rgba(229, 58, 115, 0);
+    }
 }

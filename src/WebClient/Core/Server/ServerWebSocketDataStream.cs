@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace WebClient.Core
 {
-    public class WebSocketDataStream : IServerWebSocketCommandInvocator
+    public class ServerWebSocketDataStream : IServerWebSocketCommandInvocator
     {
         public async Task InvokeAsync(WebSocketMessageContext context)
         {

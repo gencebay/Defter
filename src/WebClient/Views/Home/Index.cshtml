@@ -1,7 +1,11 @@
-﻿<div>
+﻿@using static WebClient.Core.WebClientConstants
+
+<div>
     <div>
-        <i style="float:left;" data-feather="activity" class="pink"></i>
-        <h3 class="brown">Activities</h3>
+        <div class="pulse">
+            <i style="float:left;" data-feather="activity" class="pink"></i>
+        </div>
+        <h3 class="brown">&nbsp;&nbsp;Activities</h3>
     </div>
     <div class="bd defter-box">
         @{
@@ -30,7 +34,7 @@
         'use strict';
 
         var connectionId = Cookies.get("connectionId");
-        var connectorName = "@Environment.MachineName";
+        var connectorName = "@ConnectorName";
         var containerId = "connectionContainer";
         var scheme = document.location.protocol == "https:" ? "wss" : "ws";
         var port = document.location.port ? (":" + document.location.port) : "";
@@ -50,11 +54,64 @@
         }
 
         var ViewModel = function () {
-            
+            var that = this;
+            this.connectionId = ko.observable();
+            this.data = ko.observable();
+            this.dataRows = ko.observableArray([]);
+            this.connectionUrl = ko.observable(scheme + "://" + document.location.hostname + port + "?connectionId=" + connectionId + "&connectorName=" + connectorName);
+            this.logInfo = ko.observable("Waiting for connection...");
+            this.connectionState = ko.observable(state.connect);
+            this.connect = function () {
+                if (that.connectionState() == state.connected) {
+                    return;
+                }
+
+                this.logInfo("Connecting...");
+                socket = new ReconnectingWebSocket(that.connectionUrl());
+                socket.onopen = function (event) {
+                    console.log("OnOpen event: ", event);
+                    that.connectionState(state.connected);
+                    that.logInfo("Connection opened");
+                };
+                socket.onclose = function (event) {
+                    that.connectionState(state.connect);
+                    that.logInfo('Connection closed. Code: ' + event.code + '. Reason: ' + event.reason + '');
+                };
+                socket.onerror = function () {
+                    console.log("socket onerror");
+                    switch (socket.readyState) {
+                        case WebSocket.CLOSED:
+                            that.connectionState(state.connect);
+                            that.logInfo("Connection closed");
+                            break;
+                        default:
+                            that.logInfo("Unknown WebSocket State: " + socket.readyState);
+                            break;
+                    }
+                };
+                socket.onmessage = function (event) {
+
+                    if (event.data) {
+
+                        var context = JSON.parse(event.data);
+
+                        if (context && context.Command == WebSocketCommands.Handshake) {
+                            that.connectionId(context.Value);
+                            console.log("Handshake connectionId: ", that.connectionId());
+                            Cookies.set('connectionId', context.Value);
+                        }
+
+                        console.log("Incoming context: ", context);
+                        
+                        // that.dataRows.push(row);
+                    }
+                };
+            }
         };
 
         var instance = new ViewModel();
         ko.applyBindings(instance, document.getElementById(containerId));
+        instance.connect();
     });
 
     function rowCreatedHandler(row, data, index) {
