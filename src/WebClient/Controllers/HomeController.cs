@@ -3,19 +3,27 @@ using Microsoft.AspNetCore.Mvc;
 using NetCoreStack.Contracts;
 using NetCoreStack.Mvc.Extensions;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WebClient.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IDefterApi _defterApi;
+
+        public HomeController(IDefterApi defterApi)
+        {
+            _defterApi = defterApi;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult GetMessages(CollectionRequest request)
+        public async Task<IActionResult> GetMessages(CollectionRequest request)
         {
-            return Json(new List<DefterGenericMessage> { }.ToCollectionResult(request));
+            return Json(await _defterApi.Sorgu(request));
         }
     }
 }

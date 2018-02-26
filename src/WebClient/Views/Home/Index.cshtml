@@ -10,8 +10,9 @@
     <div class="bd defter-box">
         @{
             var gridComponent = Html.Efe().Grid<DefterGenericMessage>()
-            .Name("messagesGrid")
+            .Name("messageGrid")
             .DataSource(source => source.Ajax().Read("GetMessages", "Home"))
+            .DataSource(source => source.WebApi())
             .Events(events => events.Init("gridInitHandler").CreatedRow("rowCreatedHandler"))
             .PageLength(PageLengths.TwentyFive)
             .BindableColumns(columns =>
@@ -19,6 +20,7 @@
                 columns.Bind(x => x.RequestId);
                 columns.Bind(x => x.Name);
                 columns.Bind(x => x.OperationName);
+                columns.Bind(x => x.UtcCreatedDate);
                 columns.TemplateColumn("Select", "btnGridSelectRow");
             });
 
@@ -99,11 +101,11 @@
                             that.connectionId(context.Value);
                             console.log("Handshake connectionId: ", that.connectionId());
                             Cookies.set('connectionId', context.Value);
+                            return;
                         }
 
                         console.log("Incoming context: ", context);
-                        
-                        // that.dataRows.push(row);
+                        that.dataRows.unshift(context.Value);
                     }
                 };
             }
@@ -112,6 +114,8 @@
         var instance = new ViewModel();
         ko.applyBindings(instance, document.getElementById(containerId));
         instance.connect();
+
+        window.viewModel = instance;
     });
 
     function rowCreatedHandler(row, data, index) {
@@ -119,6 +123,7 @@
     }
 
     var gridInitHandler = function (e, settings, json) {
+        return;
     }
 
 </script>

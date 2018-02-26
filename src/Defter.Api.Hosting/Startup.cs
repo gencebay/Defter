@@ -10,6 +10,7 @@ using NetCoreStack.WebSockets;
 using Swashbuckle.AspNetCore.Swagger;
 using Defter.SharedLibrary.Models;
 using Defter.Api.Hosting.Extensions;
+using NetCoreStack.Mvc;
 
 namespace Defter.Api.Hosting
 {
@@ -32,6 +33,10 @@ namespace Defter.Api.Hosting
 
             services.AddScoped<LogManager>();
 
+            services.AddLocalization();
+
+            services.AddNetCoreStack();
+
             services.AddNetCoreStackMongoDb<MongoDbContext>(Configuration);
 
             services.AddSwaggerGen(c =>
@@ -43,6 +48,8 @@ namespace Defter.Api.Hosting
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseNativeWebSockets();
+
+            app.UseRequestLocalization();
 
             app.UseSwagger();
 

@@ -1,5 +1,6 @@
 ﻿using Defter.SharedLibrary;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreStack.Contracts;
 using NetCoreStack.WebSockets;
 using System.Threading.Tasks;
 
@@ -15,6 +16,13 @@ namespace Defter.Api.Hosting.Controllers
         {
             _logManager = logManager;
             _connectionManager = connectionManager;
+        }
+
+        [HttpGet(nameof(Sorgu))]
+        public async Task<CollectionResult<DefterGenericMessage>> Sorgu(CollectionRequest request)
+        {
+            await Task.CompletedTask;
+            return _logManager.GetCollection(request);
         }
 
         [HttpPost(nameof(Yaz))]

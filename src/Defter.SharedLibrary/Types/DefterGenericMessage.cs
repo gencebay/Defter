@@ -1,4 +1,6 @@
 ﻿using NetCoreStack.Contracts;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Defter.SharedLibrary
 {
@@ -9,5 +11,8 @@ namespace Defter.SharedLibrary
 
         [PropertyDescriptor(EnableFilter = false)]
         public string ResponseContent { get; set; }
+
+        [Display(Name = "Created Date")]
+        public DateTime UtcCreatedDate { get; set; }
     }
 }

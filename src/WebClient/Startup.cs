@@ -28,6 +28,11 @@ namespace WebClient
             {
                 // Register the API to use as a Proxy
                 options.Register<IDefterApi>();
+
+                options.CultureFactory = () =>
+                {
+                    return System.Threading.Thread.CurrentThread.CurrentCulture;
+                };
             });
 
             services.AddNativeWebSockets<ServerWebSocketDataStream>();
