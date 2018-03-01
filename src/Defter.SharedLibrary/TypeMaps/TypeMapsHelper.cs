@@ -1,8 +1,7 @@
-﻿using Defter.SharedLibrary.Models;
+﻿using Defter.SharedLibrary.Helpers;
+using Defter.SharedLibrary.Models;
 using NetCoreStack.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Defter.SharedLibrary
 {
@@ -15,7 +14,7 @@ namespace Defter.SharedLibrary
                 throw new ArgumentNullException(nameof(message));
             }
 
-            return new DefterLog
+            var log = new DefterLog
             {
                 Action = message.Action,
                 Authenticated = message.Authenticated,
@@ -35,8 +34,8 @@ namespace Defter.SharedLibrary
                 ResponseContent = message.ResponseContent,
                 ResponseStatus = message.ResponseStatus,
                 RoutingLatency = message.RoutingLatency,
-                SavedRequestContentLength = message.SavedRequestContentLength,
-                SavedResponseContentLength = message.SavedResponseContentLength,
+                RequestContentLength = message.RequestContentLength,
+                ResponseContentLength = message.ResponseContentLength,
                 ServiceOid = message.ServiceOid,
                 Signature = message.Signature,
                 Status = message.Status,
@@ -44,9 +43,18 @@ namespace Defter.SharedLibrary
                 Type = message.Type,
                 UserId = message.UserId,
                 UserIdProv = message.UserIdProv,
-                UserName = message.UserName,
-                UtcCreatedDate = DateTime.UtcNow
+                UserName = message.UserName
             };
+
+            if (message.Time != default(double))
+            {
+                log.UtcCreatedDateTime = DateTimeHelper.JavaTimeStampToDateTime(message.Time);
+
+                // DateTimeKind.Local
+                log.CreatedDateTime = DateTimeHelper.JavaTimeStampToDateTime(message.Time);
+            }
+
+            return log;
         }
     }
 }

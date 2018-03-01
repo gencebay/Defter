@@ -1,12 +1,14 @@
 using Defter.SharedLibrary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetCoreStack.Mvc;
 using NetCoreStack.Proxy;
 using NetCoreStack.WebSockets;
 using NetCoreStack.WebSockets.ProxyClient;
+using System.Globalization;
 using WebClient.Core;
 
 namespace WebClient
@@ -37,6 +39,8 @@ namespace WebClient
 
             services.AddNativeWebSockets<ServerWebSocketDataStream>();
 
+            services.AddLocalization();
+
             services.AddNetCoreStackMvc();
 
             services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
@@ -55,6 +59,12 @@ namespace WebClient
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseRequestLocalization(new RequestLocalizationOptions {
+                DefaultRequestCulture = new RequestCulture(new CultureInfo(HostingFactory.DefaultCulture)),
+                SupportedCultures = HostingFactory.SupportedCultures,
+                SupportedUICultures = HostingFactory.SupportedCultures
+            });
 
             app.UseStaticFiles();
 

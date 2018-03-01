@@ -1,4 +1,5 @@
-﻿@using static WebClient.Core.WebClientConstants
+﻿@using NetCoreStack.Mvc.Components.Extensions
+@using static WebClient.Core.WebClientConstants
 
 <div>
     <div>
@@ -20,8 +21,9 @@
                 columns.Bind(x => x.RequestId);
                 columns.Bind(x => x.Name);
                 columns.Bind(x => x.OperationName);
-                columns.Bind(x => x.UtcCreatedDate);
-                columns.TemplateColumn("Select", "btnGridSelectRow");
+                columns.Bind(x => x.CreatedDateTime);
+                columns.TemplateColumn("İstek Boyut", "requestLabel").DisableOrder();
+                columns.TemplateColumn("Cevap Boyut", "responseLabel").DisableOrder();
             });
 
             gridComponent.FilterPanel("filterModal", "Filtre Uygula");
@@ -32,8 +34,77 @@
 
 <script>
 
+    var grid = {};
+    
+    function selectGridRow(e, gridSelector) {
+        e.preventDefault();
+        var tr = $(e).closest('tr');
+        var data = grid.row(tr).data();
+        console.log(data);
+    };
+
+    $('#messageGrid tbody').on('click', 'tr', function () {
+        grid.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
+    $('#messageGrid tbody').on('dblclick', 'tr', function () { 
+        var data = grid.row($(this)).data();
+        console.log(data);
+    });
+
+    efe.templates.btnGridDetailRow = function (data, type, row, meta) {
+        var template = "<a class='detailLink' data-id='<%=row.id%>' " +
+            "onclick='javascript:selectGridRow(this, \"<%=gridName%>\");' aria-expanded='false'> " +
+            " Detay </a>";
+
+        var tmpl = _.template(template);
+        return tmpl({ row: row, gridName: meta.settings.sInstance });
+    };
+
+    efe.templates.requestLabel = function (data, type, row, meta) {
+        var size = efe.utils.bytesToSize(row.requestContentLength);
+        var template = "<span class='indigo'> " + size + " </span>";
+        var tmpl = _.template(template);
+        return tmpl({ row: row, gridName: meta.settings.sInstance });
+    };
+
+    efe.templates.responseLabel = function (data, type, row, meta) {
+        var size = efe.utils.bytesToSize(row.responseContentLength);
+        var icon = "check";
+        var color = "teal"
+        if (row.responseStatus >= 400) {
+            icon = "alert-octagon";
+            color = "red";
+        }
+
+        var template = '<div class="flex-container">' +
+            '<i data-feather="' + icon + '" class="flex-item ' + color + '"></i>' +
+            '<span class="flex-item"> ' + size + ' </span></div>';
+
+        var tmpl = _.template(template);
+        return tmpl({ row: row, gridName: meta.settings.sInstance });
+    };
+
+    efe.templates.responseStatus = function (data, type, row, meta) {
+        var labelCss = "label-success";
+        var text = "Ok";
+        var iconCss = "check";
+        if (row.responseStatus >= 400) {
+            labelCss = "label-warning";
+            text = "Warning";
+            iconCss = "warning";
+        }
+
+        var template = '<span class="label ' + labelCss + ' label-lg"><i class="fa fa-' + iconCss + '"></i> ' + text + ' </span>';
+        var tmpl = _.template(template);
+        return tmpl({ row: row, gridName: meta.settings.sInstance });
+    };
+
     $(function () {
         'use strict';
+
+        grid = $("#messageGrid").DataTable();
 
         var connectionId = Cookies.get("connectionId");
         var connectorName = "@ConnectorName";
@@ -106,6 +177,7 @@
 
                         console.log("Incoming context: ", context);
                         that.dataRows.unshift(context.Value);
+                        grid.row.add(context.Value).draw();
                     }
                 };
             }
@@ -119,10 +191,16 @@
     });
 
     function rowCreatedHandler(row, data, index) {
+        feather.replace();
         return;
     }
 
+    function initComplete(row, data, index) {
+        console.log("INIT COMPLETE");
+    }
+
     var gridInitHandler = function (e, settings, json) {
+        feather.replace();
         return;
     }
 

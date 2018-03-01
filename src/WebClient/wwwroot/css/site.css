@@ -49,9 +49,26 @@ body {
     flex: 1;
 }
 
-    .page-content > div {
-        flex: 1;
-    }
+.page-content > div {
+    flex: 1;
+}
+
+.flex-container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.flex-item {
+    text-align: center;
+}
 
 .blue {
     color: #2196f3 !important;
@@ -139,6 +156,12 @@ body {
 
 .table-striped > tbody > tr:nth-of-type(odd) {
     background-color: inherit;
+    user-select: none;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: inherit;
+    user-select: none;
 }
 
 .pulse {
@@ -153,6 +176,20 @@ body {
 
 .pulse:hover {
     animation: none;
+}
+
+.detailLink {
+    color: #2196f3 !important;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+.detailLink:hover {
+    color: #196eb1 !important;
+}
+
+tr.selected {
+    background-color: #fafafc !important;
 }
 
 @-webkit-keyframes pulse {

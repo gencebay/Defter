@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using System.Threading.Tasks;
 
 namespace Defter.Api.Hosting.Middleware
@@ -14,6 +15,7 @@ namespace Defter.Api.Hosting.Middleware
 
         public async Task Invoke(HttpContext context)
         {
+            var requestCulture = context.Features.Get<IRequestCultureFeature>();
             await _next(context);
         }
     }

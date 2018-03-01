@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace WebClient.Core
+﻿namespace WebClient.Core
 {
     public class ApiSettings
     {

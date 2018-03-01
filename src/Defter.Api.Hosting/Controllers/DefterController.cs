@@ -11,11 +11,15 @@ namespace Defter.Api.Hosting.Controllers
     {
         private readonly LogManager _logManager;
         private readonly IConnectionManager _connectionManager;
+        private readonly InMemoryMessageQueue _messageQueue;
 
-        public DefterController(LogManager logManager, IConnectionManager connectionManager)
+        public DefterController(LogManager logManager, 
+            IConnectionManager connectionManager,
+            InMemoryMessageQueue messageQueue)
         {
             _logManager = logManager;
             _connectionManager = connectionManager;
+            _messageQueue = messageQueue;
         }
 
         [HttpGet(nameof(Sorgu))]
@@ -35,7 +39,7 @@ namespace Defter.Api.Hosting.Controllers
 
             _logManager.SaveLog(model.ConvertToDefterLog());
             var webSocketContext = new WebSocketMessageContext { Command = WebSocketCommands.DataSend, Value = model };
-            await _connectionManager.BroadcastAsync(webSocketContext);
+            _messageQueue.Enqueue(webSocketContext);
 
             return new ApiResult();
         }

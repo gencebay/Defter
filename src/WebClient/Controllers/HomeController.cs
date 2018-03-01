@@ -1,8 +1,6 @@
 using Defter.SharedLibrary;
 using Microsoft.AspNetCore.Mvc;
 using NetCoreStack.Contracts;
-using NetCoreStack.Mvc.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WebClient.Controllers

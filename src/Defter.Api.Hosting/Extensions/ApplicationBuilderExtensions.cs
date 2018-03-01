@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using NetCoreStack.Data.Interfaces;
+using System;
+using System.Threading;
 
-namespace Defter.Api.Hosting.Extensions
+namespace Defter.Api.Hosting
 {
     public static class ApplicationBuilderExtensions
     {
@@ -38,6 +40,18 @@ namespace Defter.Api.Hosting.Extensions
                     });
                 }
             }
+        }
+
+        public static IApplicationBuilder UseProcessServer(this IApplicationBuilder app, 
+            CancellationToken cancellationToken)
+        {
+            if (app == null) throw new ArgumentNullException(nameof(app));
+
+            var services = app.ApplicationServices;
+            var messageQueue = services.GetRequiredService<InMemoryMessageQueue>();
+            var server = new ProcessServer(messageQueue, cancellationToken);
+
+            return app;
         }
     }
 }

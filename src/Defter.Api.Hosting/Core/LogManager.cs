@@ -4,6 +4,7 @@ using NetCoreStack.Contracts;
 using NetCoreStack.Data.Interfaces;
 using System.Linq;
 using NetCoreStack.Mvc.Extensions;
+using System.Threading;
 
 namespace Defter.Api.Hosting
 {
@@ -18,7 +19,7 @@ namespace Defter.Api.Hosting
 
         public void SaveLog(DefterLog model)
         {
-            _unitOfWork.Repository<DefterLog>().SaveAllChanges(model);
+            _unitOfWork.Repository<DefterLog>().Insert(model);
         }
 
         public CollectionResult<DefterGenericMessage> GetCollection(CollectionRequest request)
@@ -43,8 +44,8 @@ namespace Defter.Api.Hosting
                 ResponseContent = d.ResponseContent,
                 ResponseStatus = d.ResponseStatus,
                 RoutingLatency = d.RoutingLatency,
-                SavedRequestContentLength = d.SavedRequestContentLength,
-                SavedResponseContentLength = d.SavedResponseContentLength,
+                RequestContentLength = d.RequestContentLength,
+                ResponseContentLength = d.ResponseContentLength,
                 ServiceOid = d.ServiceOid,
                 Signature =d.Signature,
                 Status = d.Status,
@@ -53,8 +54,12 @@ namespace Defter.Api.Hosting
                 UserId = d.UserId,
                 UserIdProv = d.UserIdProv,
                 UserName = d.UserName,
-                UtcCreatedDate = d.UtcCreatedDate
+                CreatedDateTime = d.CreatedDateTime,
+                UtcCreatedDateTime = d.UtcCreatedDateTime
             });
+
+            var cultureInfo = Thread.CurrentThread.CurrentCulture;
+
 
             return query.ToCollectionResult(request);
         }

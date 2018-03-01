@@ -8,9 +8,10 @@ using NetCoreStack.Data.Context;
 using NetCoreStack.Data;
 using NetCoreStack.WebSockets;
 using Swashbuckle.AspNetCore.Swagger;
-using Defter.SharedLibrary.Models;
-using Defter.Api.Hosting.Extensions;
 using NetCoreStack.Mvc;
+using System.Globalization;
+using System.Threading;
+using Microsoft.AspNetCore.Localization;
 
 namespace Defter.Api.Hosting
 {
@@ -31,6 +32,8 @@ namespace Defter.Api.Hosting
 
             services.AddDomainEvents();
 
+            services.AddSingleton<InMemoryMessageQueue>();
+            services.AddSingleton<ProcessServer>();
             services.AddScoped<LogManager>();
 
             services.AddLocalization();
@@ -38,6 +41,11 @@ namespace Defter.Api.Hosting
             services.AddNetCoreStack();
 
             services.AddNetCoreStackMongoDb<MongoDbContext>(Configuration);
+
+            services.AddComposers(setup =>
+            {
+                setup.CreateMap<DefterGenericMessage, DefterLogComposer>();
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -49,7 +57,12 @@ namespace Defter.Api.Hosting
         {
             app.UseNativeWebSockets();
 
-            app.UseRequestLocalization();
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(new CultureInfo(HostingFactory.DefaultCulture)),
+                SupportedCultures = HostingFactory.SupportedCultures,
+                SupportedUICultures = HostingFactory.SupportedCultures
+            });
 
             app.UseSwagger();
 
@@ -63,6 +76,8 @@ namespace Defter.Api.Hosting
             app.UseMvc();
 
             app.CreateIndices();
+
+            app.UseProcessServer(CancellationToken.None);
         }
     }
 }

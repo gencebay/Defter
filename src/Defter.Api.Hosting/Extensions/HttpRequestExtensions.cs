@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Defter.Api.Hosting.Extensions
+namespace Defter.Api.Hosting
 {
     public static class HttpRequestExtensions
     {

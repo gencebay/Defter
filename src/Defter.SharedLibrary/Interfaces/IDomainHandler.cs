@@ -6,4 +6,9 @@ namespace Defter.SharedLibrary
     {
         Task GetHandler(object evnt);
     }
+
+    public interface IDomainHandler<TEvent> where TEvent : IDomainEvent
+    {
+        Task HandleAsync(TEvent evnt);
+    }
 }

@@ -1,4 +1,5 @@
-﻿using NetCoreStack.Data.Contracts;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using NetCoreStack.Data.Contracts;
 using System;
 
 namespace Defter.SharedLibrary.Models
@@ -9,7 +10,7 @@ namespace Defter.SharedLibrary.Models
 
         public string NodeId { get; set; }
 
-        public string Time { get; set; }
+        public double Time { get; set; }
 
         public string Type { get; set; }
 
@@ -43,9 +44,9 @@ namespace Defter.SharedLibrary.Models
 
         public string AuthType { get; set; }
 
-        public int SavedRequestContentLength { get; set; }
+        public int RequestContentLength { get; set; }
 
-        public int SavedResponseContentLength { get; set; }
+        public int ResponseContentLength { get; set; }
 
         public int ResponseStatus { get; set; }
 
@@ -59,6 +60,9 @@ namespace Defter.SharedLibrary.Models
 
         public string ResponseContent { get; set; }
         
-        public DateTime UtcCreatedDate { get; set; }
+        public DateTime UtcCreatedDateTime { get; set; }
+
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        public DateTime CreatedDateTime { get; set; }
     }
 }
