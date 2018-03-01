@@ -1,41 +1,57 @@
 ﻿@using NetCoreStack.Mvc.Components.Extensions
 @using static WebClient.Core.WebClientConstants
 
-<div>
+<div class="activityContainer">
     <div>
         <div class="pulse">
             <i style="float:left;" data-feather="activity" class="pink"></i>
         </div>
         <h3 class="brown">&nbsp;&nbsp;Activities</h3>
-    </div>
+    </div> 
     <div class="bd defter-box">
         @{
             var gridComponent = Html.Efe().Grid<DefterGenericMessage>()
-            .Name("messageGrid")
-            .DataSource(source => source.Ajax().Read("GetMessages", "Home"))
-            .DataSource(source => source.WebApi())
-            .Events(events => events.Init("gridInitHandler").CreatedRow("rowCreatedHandler"))
-            .PageLength(PageLengths.TwentyFive)
-            .BindableColumns(columns =>
-            {
-                columns.Bind(x => x.RequestId);
-                columns.Bind(x => x.Name);
-                columns.Bind(x => x.OperationName);
-                columns.Bind(x => x.CreatedDateTime);
-                columns.TemplateColumn("İstek Boyut", "requestLabel").DisableOrder();
-                columns.TemplateColumn("Cevap Boyut", "responseLabel").DisableOrder();
-            });
+                .Name("messageGrid")
+                .DataSource(source => source.Ajax().Read("GetMessages", "Home"))
+                .DataSource(source => source.WebApi())
+                .Events(events => events.Init("gridInitHandler").CreatedRow("rowCreatedHandler"))
+                .PageLength(PageLengths.TwentyFive)
+                .BindableColumns(columns =>
+                {
+                    columns.Bind(x => x.RequestId);
+                    columns.Bind(x => x.Name);
+                    columns.Bind(x => x.OperationName);
+                    columns.Bind(x => x.CreatedDateTime);
+                    columns.TemplateColumn("İstek", "requestLabel").DisableOrder();
+                    columns.TemplateColumn("Yanıt", "responseLabel").DisableOrder();
+                });
 
             gridComponent.FilterPanel("filterModal", "Filtre Uygula");
             gridComponent.Render();
         }
+    </div>
+
+    <div id="detail" class="overlay">
+
+        <a href="javascript:void(0)" class="closebtn" onclick="closeDetail()">&times;</a>
+
+        <table class="table-container" style="margin-top:50px; width: 100%; height: 100%;">
+            <tr>
+                <td valign="top" style="width: 50%;">
+                    <div id="requestContent" data-bind="jsoneditor: requestContentComputed"></div>
+                </td>
+                <td valign="top" style="width: 50%;">
+                    <div id="responseContent" data-bind="jsoneditor: responseContentComputed"></div>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 
 <script>
 
     var grid = {};
-    
+
     function selectGridRow(e, gridSelector) {
         e.preventDefault();
         var tr = $(e).closest('tr');
@@ -43,24 +59,22 @@
         console.log(data);
     };
 
+    function closeDetail() {
+        document.getElementById("detail").style.height = "0%";
+    }
+
     $('#messageGrid tbody').on('click', 'tr', function () {
         grid.$('tr.selected').removeClass('selected');
         $(this).addClass('selected');
     });
 
-    $('#messageGrid tbody').on('dblclick', 'tr', function () { 
+    $('#messageGrid tbody').on('dblclick', 'tr', function () {
         var data = grid.row($(this)).data();
-        console.log(data);
+        viewModel.requestContent(data.requestContent);
+        viewModel.responseContent(data.responseContent);
+
+        document.getElementById("detail").style.width = "100%";
     });
-
-    efe.templates.btnGridDetailRow = function (data, type, row, meta) {
-        var template = "<a class='detailLink' data-id='<%=row.id%>' " +
-            "onclick='javascript:selectGridRow(this, \"<%=gridName%>\");' aria-expanded='false'> " +
-            " Detay </a>";
-
-        var tmpl = _.template(template);
-        return tmpl({ row: row, gridName: meta.settings.sInstance });
-    };
 
     efe.templates.requestLabel = function (data, type, row, meta) {
         var size = efe.utils.bytesToSize(row.requestContentLength);
@@ -86,25 +100,14 @@
         return tmpl({ row: row, gridName: meta.settings.sInstance });
     };
 
-    efe.templates.responseStatus = function (data, type, row, meta) {
-        var labelCss = "label-success";
-        var text = "Ok";
-        var iconCss = "check";
-        if (row.responseStatus >= 400) {
-            labelCss = "label-warning";
-            text = "Warning";
-            iconCss = "warning";
-        }
-
-        var template = '<span class="label ' + labelCss + ' label-lg"><i class="fa fa-' + iconCss + '"></i> ' + text + ' </span>';
-        var tmpl = _.template(template);
-        return tmpl({ row: row, gridName: meta.settings.sInstance });
-    };
-
     $(function () {
         'use strict';
 
         grid = $("#messageGrid").DataTable();
+
+        grid.on('draw', function () {
+            feather.replace();
+        });
 
         var connectionId = Cookies.get("connectionId");
         var connectorName = "@ConnectorName";
@@ -129,11 +132,28 @@
         var ViewModel = function () {
             var that = this;
             this.connectionId = ko.observable();
-            this.data = ko.observable();
             this.dataRows = ko.observableArray([]);
             this.connectionUrl = ko.observable(scheme + "://" + document.location.hostname + port + "?connectionId=" + connectionId + "&connectorName=" + connectorName);
             this.logInfo = ko.observable("Waiting for connection...");
             this.connectionState = ko.observable(state.connect);
+            this.requestContent = ko.observable();
+            this.responseContent = ko.observable();
+            this.requestContentComputed = ko.computed(function () {
+                var val = this.requestContent();
+                if (val) {
+                    return atob(val);
+                } else {
+                    return "{}";
+                }
+            }, this);
+            this.responseContentComputed = ko.computed(function () {
+                var val = this.responseContent();
+                if (val) {
+                    return atob(val);
+                } else {
+                    return "{}";
+                }
+            }, this);
             this.connect = function () {
                 if (that.connectionState() == state.connected) {
                     return;
@@ -191,16 +211,10 @@
     });
 
     function rowCreatedHandler(row, data, index) {
-        feather.replace();
         return;
     }
 
-    function initComplete(row, data, index) {
-        console.log("INIT COMPLETE");
-    }
-
     var gridInitHandler = function (e, settings, json) {
-        feather.replace();
         return;
     }
 
