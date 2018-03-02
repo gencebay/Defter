@@ -11,13 +11,13 @@ namespace WcfServer.Hosting
             Dependency = dependency;
         }
 
-        public ServiceResult SomeQuery(string value)
+        public CompositeType SomeQuery(string value)
         {
-            return new ServiceResult<CompositeType>(new CompositeType
+            return new CompositeType
             {
                 BoolValue = true,
                 StringValue = $"Echo from server {DateTime.Now.ToString()}",
-            });
+            };
         }
     }
 }

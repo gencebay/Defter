@@ -8,6 +8,6 @@ namespace Wcf.Contracts
     {
         [OperationContract]
         [FaultContract(typeof(ServiceException))]
-        ServiceResult SomeQuery(string value);
+        CompositeType SomeQuery(string value);
     }
 }

@@ -37,6 +37,8 @@ namespace Defter.Api.Hosting.Controllers
                 return new ApiResult();
             }
 
+            await Task.CompletedTask;
+
             _logManager.SaveLog(model.ConvertToDefterLog());
             var webSocketContext = new WebSocketMessageContext { Command = WebSocketCommands.DataSend, Value = model };
             _messageQueue.Enqueue(webSocketContext);
