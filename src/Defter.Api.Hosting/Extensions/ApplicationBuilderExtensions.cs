@@ -41,17 +41,5 @@ namespace Defter.Api.Hosting
                 }
             }
         }
-
-        public static IApplicationBuilder UseProcessServer(this IApplicationBuilder app, 
-            CancellationToken cancellationToken)
-        {
-            if (app == null) throw new ArgumentNullException(nameof(app));
-
-            var services = app.ApplicationServices;
-            var messageQueue = services.GetRequiredService<InMemoryMessageQueue>();
-            var server = new ProcessServer(messageQueue, cancellationToken);
-
-            return app;
-        }
     }
 }

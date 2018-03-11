@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 
-namespace Defter.SharedLibrary
+namespace Defter.Api.Hosting
 {
     public class RedisStorageOptions : IOptions<RedisStorageOptions>
     {

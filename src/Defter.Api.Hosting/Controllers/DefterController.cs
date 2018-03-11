@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NetCoreStack.Contracts;
 using NetCoreStack.WebSockets;
+using System;
 using System.Threading.Tasks;
 
 namespace Defter.Api.Hosting.Controllers
@@ -26,7 +27,7 @@ namespace Defter.Api.Hosting.Controllers
         public async Task<CollectionResult<DefterGenericMessage>> Sorgu(CollectionRequest request)
         {
             await Task.CompletedTask;
-            return _logManager.GetCollection(request);
+            return _logManager.GetDefterLogCollection(request);
         }
 
         [HttpPost(nameof(Yaz))]
@@ -37,11 +38,23 @@ namespace Defter.Api.Hosting.Controllers
                 return new ApiResult();
             }
 
-            await Task.CompletedTask;
+            try
+            {
+                // Burada oluşabilecek hatayı yakalayıp explicit 500 dönüyor ve API Gateway' in logu kendi
+                // veri tabanına yazmasını sağlıyoruz.
+                _logManager.SaveLog(model.ConvertToDefterLog());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                var webSocketContext = new WebSocketMessageContext { Command = WebSocketCommands.DataSend, Value = model };
+                _messageQueue.Enqueue(webSocketContext);
+            }
 
-            _logManager.SaveLog(model.ConvertToDefterLog());
-            var webSocketContext = new WebSocketMessageContext { Command = WebSocketCommands.DataSend, Value = model };
-            _messageQueue.Enqueue(webSocketContext);
+            await Task.CompletedTask;
 
             return new ApiResult();
         }

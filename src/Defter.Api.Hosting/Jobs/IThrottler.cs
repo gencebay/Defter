@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Defter.SharedLibrary
+namespace Defter.Api.Hosting
 {
     public interface IThrottler
     {

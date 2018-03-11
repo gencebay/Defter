@@ -6,10 +6,11 @@ namespace Defter.SharedLibrary
 {
     public class LogReceivedHandler : DomainHandlerBase<LogReceivedEvent>
     {
-        private readonly RedisDomainEventStorage _eventStorage;
-        public LogReceivedHandler(RedisDomainEventStorage eventStorage)
+        private readonly IEventDispatcher _eventDispatcher;
+
+        public LogReceivedHandler(IEventDispatcher eventDispatcher)
         {
-            _eventStorage = eventStorage;
+            _eventDispatcher = eventDispatcher;
         }
 
         public override async Task HandleAsync(LogReceivedEvent evnt)
@@ -19,7 +20,7 @@ namespace Defter.SharedLibrary
                 throw new ArgumentNullException(nameof(evnt));
             }
 
-            await _eventStorage.SaveEventAsync(evnt);
+            await _eventDispatcher.Dispatch(evnt);
         }
     }
 }

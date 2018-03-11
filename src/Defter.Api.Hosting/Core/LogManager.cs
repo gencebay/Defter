@@ -22,7 +22,7 @@ namespace Defter.Api.Hosting
             _unitOfWork.Repository<DefterLog>().Insert(model);
         }
 
-        public CollectionResult<DefterGenericMessage> GetCollection(CollectionRequest request)
+        public CollectionResult<DefterGenericMessage> GetDefterLogCollection(CollectionRequest request)
         {
             var query = _unitOfWork.Repository<DefterLog>().Select(d => new DefterGenericMessage
             {

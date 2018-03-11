@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.Caching.Redis;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Defter.SharedLibrary
+namespace Defter.Api.Hosting
 {
-    internal class RedisManager : IDisposable
+    internal class RedisStorage
     {
         private const string SetScript = (@"
                 redis.call('HMSET', KEYS[1], 'type', ARGV[1], 'data', ARGV[2])
@@ -26,17 +27,25 @@ namespace Defter.SharedLibrary
 
         private const string DataKey = "data";
         private const string TypeKey = "type";
-        private readonly RedisCacheOptions _options;
+        private readonly RedisStorageOptions _options;
         private readonly string _instance;
+        private static readonly ConcurrentDictionary<string, Assembly> _cache = new ConcurrentDictionary<string, Assembly>();
 
         private readonly SemaphoreSlim _connectionLock = new SemaphoreSlim(initialCount: 1, maxCount: 1);
+        protected List<Assembly> AssemblyList { get; }
 
-        public RedisManager(IOptions<RedisCacheOptions> optionsAccessor)
+        public RedisStorage(IOptions<RedisStorageOptions> optionsAccessor, AssemblyOptions assemblyOptions)
         {
             if (optionsAccessor == null)
             {
                 throw new ArgumentNullException(nameof(optionsAccessor));
             }
+
+            if (assemblyOptions == null)
+            {
+                throw new ArgumentNullException(nameof(assemblyOptions));
+            }
+
 
             _options = optionsAccessor.Value;
 
@@ -46,6 +55,31 @@ namespace Defter.SharedLibrary
             }
 
             _instance = _options.InstanceName + ":";
+            AssemblyList = assemblyOptions.AssemblyList;
+        }
+
+        private Type TryGetType(string fullname)
+        {
+            if(_cache.TryGetValue(fullname, out Assembly assembly))
+            {
+                return assembly.GetType(fullname, false);
+            }
+
+            foreach (var item in AssemblyList)
+            {
+                Type type = item.GetType(fullname, false);
+                if (type != null)
+                {
+                    if (!_cache.ContainsKey(fullname))
+                    {
+                        _cache.TryAdd(fullname, item);
+                    }
+
+                    return type;
+                }
+            }
+
+            throw new ArgumentOutOfRangeException(fullname);
         }
 
         private RedisValue[] GetRedisMembers(params string[] members)
@@ -78,10 +112,8 @@ namespace Defter.SharedLibrary
 
             return (RedisValue[])result;
         }
-
-        // public object Get(string key)
-
-        public RedisStorageResult Get(string key)
+        
+        public StorageResult Get(string key)
         {
             if (key == null)
             {
@@ -94,7 +126,7 @@ namespace Defter.SharedLibrary
 
             if (results.Length >= 2 && results[1].HasValue)
             {
-                return new RedisStorageResult
+                return new StorageResult
                 {
                     Type = results[0],
                     Data = results[1]
@@ -104,7 +136,7 @@ namespace Defter.SharedLibrary
             return null;
         }
 
-        public async Task<RedisStorageResult> GetAsync(string key)
+        public async Task<StorageResult> GetAsync(string key)
         {
             if (key == null)
             {
@@ -118,7 +150,7 @@ namespace Defter.SharedLibrary
 
             if (results.Length >= 2 && results[1].HasValue)
             {
-                return new RedisStorageResult
+                return new StorageResult
                 {
                     Type = results[0],
                     Data = results[1]
@@ -244,15 +276,13 @@ namespace Defter.SharedLibrary
             await _redisDatabase.KeyDeleteAsync(_instance + key);
         }
 
-        public async Task RemoveKeysAsync(IEnumerable<IDomainEventIdentity> domainEvents)
+        public async Task RemoveKeysAsync(IEnumerable<IJob> jobs)
         {
-            if (domainEvents != null && domainEvents.Any())
+            if (jobs != null && jobs.Any())
             {
-                await ConnectAsync();
-
-                foreach (var item in domainEvents)
+                foreach (var item in jobs)
                 {
-                    await _redisDatabase.KeyDeleteAsync(_instance + item.Id);
+                    await RemoveAsync(item.Id);
                 }
             }
         }
@@ -267,16 +297,72 @@ namespace Defter.SharedLibrary
 
         public async Task<List<string>> GetAllKeysAsync()
         {
-            await ConnectAsync();
-
+            Connect();
             var list = new List<string>();
             var keysScript = @"return redis.call('KEYS', ARGV[1])";
             var result = await _redisDatabase.ScriptEvaluateAsync(keysScript, values: new RedisValue[] { _instance + "*" });
             if (result.IsNull)
                 return list;
 
-            var values = (RedisValue[])result;
-            return values.Select(p => (string)p).ToList();
+            try
+            {
+                var values = (RedisValue[])result;
+                return values.Select(p => (string)p).ToList();
+            }
+            catch (Exception)
+            {
+            }
+
+            return list;
+        }
+
+        public async Task<List<IJob>> GetJobsAsync()
+        {
+            List<IJob> jobs = new List<IJob>();
+            var keys = await GetAllKeysAsync();
+            if (keys != null && keys.Any())
+            {
+                foreach (var key in keys)
+                {
+                    StorageResult redisResult = Get(key);
+                    if (redisResult != null)
+                    {
+                        var type = TryGetType(redisResult.Type);
+                        var job = (IJob)JsonConvert.DeserializeObject((string)redisResult.Data, type);
+                        jobs.Add(job);
+                    }
+                }
+            }
+
+            return jobs;
+        }
+
+        public async Task<List<T>> GetTypedJobsAsync<T>() where T : IJob
+        {
+            List<T> jobs = new List<T>();
+            var keys = await GetAllKeysAsync();
+            if (keys != null && keys.Any())
+            {
+                var assembly = typeof(T).Assembly;
+                foreach (var key in keys)
+                {
+                    StorageResult redisResult = Get(key);
+                    if (redisResult != null)
+                    {
+                        var fullname = redisResult.Type;
+                        var typedEvent = typeof(T).FullName;
+
+                        if (fullname == typedEvent)
+                        {
+                            var type = assembly.GetType(redisResult.Type, false);
+                            var job = (T)JsonConvert.DeserializeObject((string)redisResult.Data, type);
+                            jobs.Add(job);
+                        }
+                    }
+                }
+            }
+
+            return jobs;
         }
 
         public void Dispose()

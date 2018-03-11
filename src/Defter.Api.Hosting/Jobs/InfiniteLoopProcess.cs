@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace Defter.SharedLibrary
+namespace Defter.Api.Hosting
 {
-    public class InfiniteLoopTask : IBackgroundProcessWrapper
+    internal class InfiniteLoopProcess : IBackgroundProcessWrapper
     {
-        public InfiniteLoopTask(IBackgroundTask innerProcess)
+        public InfiniteLoopProcess(IBackgroundTask innerProcess)
         {
             InnerProcess = innerProcess ?? throw new ArgumentNullException(nameof(innerProcess));
         }

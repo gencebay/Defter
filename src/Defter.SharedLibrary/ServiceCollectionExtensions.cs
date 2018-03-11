@@ -7,11 +7,8 @@ namespace Defter.SharedLibrary
     {
         public static IServiceCollection AddDomainEvents(this IServiceCollection services)
         {
-            services.AddSingleton<RedisDomainEventStorage>();
             services.AddSingleton<IEventDispatcher, DomainEventDispatcher>();
-
             services.AddScoped<IScopeEventRegistrar, DefaultScopeEventRegistrar>();
-            services.AddScoped<IDomainHandler<LogReceivedEvent>, LogReceivedHandler>();
 
             return services;
         }

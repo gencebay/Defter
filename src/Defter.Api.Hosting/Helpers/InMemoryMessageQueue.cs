@@ -1,7 +1,5 @@
-﻿using Defter.SharedLibrary;
-using Defter.SharedLibrary.Helpers;
+﻿using Defter.SharedLibrary.Helpers;
 using NetCoreStack.WebSockets;
-using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
@@ -11,6 +9,8 @@ namespace Defter.Api.Hosting
     {
         private readonly SocketQueue _socketQueue;
         private readonly IConnectionManager _connectionManager;
+
+        public string Id => throw new System.NotImplementedException();
 
         public InMemoryMessageQueue(IConnectionManager connectionManager)
         {

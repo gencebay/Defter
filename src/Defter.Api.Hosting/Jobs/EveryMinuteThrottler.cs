@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Threading;
 
-namespace Defter.SharedLibrary
+namespace Defter.Api.Hosting
 {
-    public class ThirdSecondThrottler : IThrottler
+    internal class EveryMinuteThrottler : IThrottler
     {
-        public ThirdSecondThrottler()
-        {
-        }
-
         public void Throttle(CancellationToken token)
         {
-            while (DateTime.Now.Second % 3 != 0)
+            while (DateTime.Now.Second != 0)
             {
                 WaitASecondOrThrowIfCanceled(token);
             }

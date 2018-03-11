@@ -18,11 +18,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
+    <PackageReference Include="ncrontab" Version="3.3.0" />
     <PackageReference Include="NetCoreStack.Data" Version="2.0.15" />
-    <PackageReference Include="NetCoreStack.Jobs" Version="2.0.0" />
     <PackageReference Include="NetCoreStack.Mvc" Version="2.0.15" />
     <PackageReference Include="NetCoreStack.WebSockets" Version="2.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

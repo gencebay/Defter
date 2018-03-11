@@ -2,16 +2,15 @@
 using Defter.SharedLibrary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetCoreStack.Data.Context;
 using NetCoreStack.Data;
+using NetCoreStack.Data.Context;
+using NetCoreStack.Mvc;
 using NetCoreStack.WebSockets;
 using Swashbuckle.AspNetCore.Swagger;
-using NetCoreStack.Mvc;
 using System.Globalization;
-using System.Threading;
-using Microsoft.AspNetCore.Localization;
 
 namespace Defter.Api.Hosting
 {
@@ -39,6 +38,12 @@ namespace Defter.Api.Hosting
             services.AddLocalization();
 
             services.AddNetCoreStack();
+
+            services.AddJobs(setup =>
+            {
+                setup.Register<JobWorker>(Cron.Minutely());
+                setup.Register<CustomJob, ThirdSecondThrottler>();
+            });
 
             services.AddNetCoreStackMongoDb<MongoDbContext>(Configuration);
 
@@ -77,7 +82,7 @@ namespace Defter.Api.Hosting
 
             app.CreateIndices();
 
-            app.UseProcessServer(CancellationToken.None);
+            app.UseJobServer();
         }
     }
 }
