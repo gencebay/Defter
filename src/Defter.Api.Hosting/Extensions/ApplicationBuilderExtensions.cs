@@ -1,15 +1,45 @@
-﻿using Defter.SharedLibrary.Models;
+﻿using Defter.Api.Hosting.Middleware;
+using Defter.SharedLibrary;
+using Defter.SharedLibrary.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using NetCoreStack.Data.Interfaces;
-using System;
-using System.Threading;
+using NetCoreStack.WebSockets;
+using System.Globalization;
 
 namespace Defter.Api.Hosting
 {
     public static class ApplicationBuilderExtensions
     {
+        public static void UseApi(this IApplicationBuilder app)
+        {
+            app.UseNativeWebSockets();
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(new CultureInfo(HostingFactory.DefaultCulture)),
+                SupportedCultures = HostingFactory.SupportedCultures,
+                SupportedUICultures = HostingFactory.SupportedCultures
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Defter API v1");
+            });
+
+            app.UseMiddleware<DefterMiddleware>();
+
+            app.UseMvc();
+
+            app.CreateIndices();
+
+            app.UseJobServer();
+        }
+
         public static void CreateIndices(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())

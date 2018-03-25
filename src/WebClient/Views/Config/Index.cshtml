@@ -1,0 +1,224 @@
+﻿@using NetCoreStack.Mvc.Components.Extensions
+@using static WebClient.Core.WebClientConstants
+
+<div class="activityContainer">
+    <div>
+        <div class="pulse">
+            <i style="float:left;" data-feather="activity" class="pink"></i>
+        </div>
+        <h3 class="brown">&nbsp;&nbsp;Activities</h3>
+    </div> 
+    <div class="bd defter-box">
+        @{
+            var gridComponent = Html.Efe().Grid<DefterGenericMessage>()
+                .Name("messageGrid")
+                .DataSource(source => source.Ajax().Read("GetMessages", "Home"))
+                .DataSource(source => source.WebApi())
+                .Events(events => events.Init("gridInitHandler").CreatedRow("rowCreatedHandler"))
+                .PageLength(PageLengths.TwentyFive)
+                .BindableColumns(columns =>
+                {
+                    columns.Bind(x => x.RequestId);
+                    columns.Bind(x => x.Name);
+                    columns.Bind(x => x.OperationName);
+                    columns.Bind(x => x.CreatedDateTime);
+                    columns.TemplateColumn("İstek", "requestLabel").DisableOrder();
+                    columns.TemplateColumn("Yanıt", "responseLabel").DisableOrder();
+                });
+
+            gridComponent.FilterPanel("filterModal", "Filtre Uygula");
+            gridComponent.Render();
+        }
+    </div>
+
+    <div id="detail" class="modal">
+        <div class="modal-content">
+            <span style="margin-right:5px;" class="close" onclick="closeModal()">&times;</span>
+            <table class="table-container" style="width: 100%; height: 100%;">
+                <tr>
+                    <td valign="top" style="width: 50%;">
+                        <div id="requestContent" data-bind="jsoneditor: requestContentComputed"></div>
+                    </td>
+                    <td valign="top" style="width: 50%;">
+                        <div id="responseContent" data-bind="jsoneditor: responseContentComputed"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>        
+    </div>
+</div>
+
+<script>
+
+    var grid = {};
+    var modal = document.getElementById("detail");
+
+    function selectGridRow(e, gridSelector) {
+        e.preventDefault();
+        var tr = $(e).closest('tr');
+        var data = grid.row(tr).data();
+        console.log(data);
+    };
+
+    function closeModal() {
+        modal.style.display = "none";
+    }
+
+    $('#messageGrid tbody').on('click', 'tr', function () {
+        grid.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
+    $('#messageGrid tbody').on('dblclick', 'tr', function () {
+        var data = grid.row($(this)).data();
+        viewModel.requestContent(data.requestContent);
+        viewModel.responseContent(data.responseContent);
+
+        // $('.jsoneditor-expand-all').trigger('click');
+
+        modal.style.display = "block";
+    });
+
+    efe.templates.requestLabel = function (data, type, row, meta) {
+        var size = efe.utils.bytesToSize(row.requestContentLength);
+        var template = "<span class='indigo'> " + size + " </span>";
+        var tmpl = _.template(template);
+        return tmpl({ row: row, gridName: meta.settings.sInstance });
+    };
+
+    efe.templates.responseLabel = function (data, type, row, meta) {
+        var size = efe.utils.bytesToSize(row.responseContentLength);
+        var icon = "check";
+        var color = "teal"
+        if (row.responseStatus >= 400) {
+            icon = "alert-octagon";
+            color = "red";
+        }
+
+        var template = '<div class="flex-container">' +
+            '<i data-feather="' + icon + '" class="flex-item ' + color + '"></i>' +
+            '<span class="flex-item"> ' + size + ' </span></div>';
+
+        var tmpl = _.template(template);
+        return tmpl({ row: row, gridName: meta.settings.sInstance });
+    };
+
+    $(function () {
+        'use strict';
+
+        grid = $("#messageGrid").DataTable();
+
+        grid.on('draw', function () {
+            feather.replace();
+        });
+
+        var connectionId = Cookies.get("connectionId");
+        var connectorName = "@ConnectorName";
+        var containerId = "connectionContainer";
+        var scheme = document.location.protocol == "https:" ? "wss" : "ws";
+        var port = document.location.port ? (":" + document.location.port) : "";
+        var socket;
+
+        var WebSocketCommands = {
+            Connect: 1,
+            DataSend: 2,
+            Handshake: 4,
+            All: 7
+        }
+
+        var state = {
+            connect: "Connect",
+            connecting: "Connecting...",
+            connected: "Connected"
+        }
+
+        var ViewModel = function () {
+            var that = this;
+            this.connectionId = ko.observable();
+            this.dataRows = ko.observableArray([]);
+            this.connectionUrl = ko.observable(scheme + "://" + document.location.hostname + port + "?connectionId=" + connectionId + "&connectorName=" + connectorName);
+            this.logInfo = ko.observable("Waiting for connection...");
+            this.connectionState = ko.observable(state.connect);
+            this.requestContent = ko.observable();
+            this.responseContent = ko.observable();
+            this.requestContentComputed = ko.computed(function () {
+                var val = this.requestContent();
+                if (val) {
+                    return atob(val);
+                } else {
+                    return "{}";
+                }
+            }, this);
+            this.responseContentComputed = ko.computed(function () {
+                var val = this.responseContent();
+                if (val) {
+                    return atob(val);
+                } else {
+                    return "{}";
+                }
+            }, this);
+            this.connect = function () {
+                if (that.connectionState() == state.connected) {
+                    return;
+                }
+
+                this.logInfo("Connecting...");
+                socket = new ReconnectingWebSocket(that.connectionUrl());
+                socket.onopen = function (event) {
+                    console.log("OnOpen event: ", event);
+                    that.connectionState(state.connected);
+                    that.logInfo("Connection opened");
+                };
+                socket.onclose = function (event) {
+                    that.connectionState(state.connect);
+                    that.logInfo('Connection closed. Code: ' + event.code + '. Reason: ' + event.reason + '');
+                };
+                socket.onerror = function () {
+                    console.log("socket onerror");
+                    switch (socket.readyState) {
+                        case WebSocket.CLOSED:
+                            that.connectionState(state.connect);
+                            that.logInfo("Connection closed");
+                            break;
+                        default:
+                            that.logInfo("Unknown WebSocket State: " + socket.readyState);
+                            break;
+                    }
+                };
+                socket.onmessage = function (event) {
+
+                    if (event.data) {
+
+                        var context = JSON.parse(event.data);
+
+                        if (context && context.Command == WebSocketCommands.Handshake) {
+                            that.connectionId(context.Value);
+                            console.log("Handshake connectionId: ", that.connectionId());
+                            Cookies.set('connectionId', context.Value);
+                            return;
+                        }
+
+                        console.log("Incoming context: ", context);
+                        that.dataRows.unshift(context.Value);
+                        grid.row.add(context.Value).draw();
+                    }
+                };
+            }
+        };
+
+        var instance = new ViewModel();
+        ko.applyBindings(instance, document.getElementById(containerId));
+        instance.connect();
+
+        window.viewModel = instance;
+    });
+
+    function rowCreatedHandler(row, data, index) {
+        return;
+    }
+
+    var gridInitHandler = function (e, settings, json) {
+        return;
+    }
+
+</script>
