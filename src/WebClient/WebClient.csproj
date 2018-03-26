@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="NetCoreStack.Mvc" Version="2.0.15" />
     <PackageReference Include="NetCoreStack.Proxy" Version="2.1.8" />
     <PackageReference Include="NetCoreStack.WebSockets" Version="2.3.1" />

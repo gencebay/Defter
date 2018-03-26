@@ -18,10 +18,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wcf.Contracts", "test\Wcf.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F88A1459-08A8-4A87-8BC9-6E3BB2982C8D}"
 	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
 		README.md = README.md
 	EndProjectSection
+	ProjectSection(FolderGlobals) = preProject
+		__JSONSchema = http://json.schemastore.org/grunt-clean-task
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Defter.Api.Tests", "test\Defter.Api.Tests\Defter.Api.Tests.csproj", "{FC1496E9-B6CA-425B-9567-70005E52D892}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Defter.Api.Tests", "test\Defter.Api.Tests\Defter.Api.Tests.csproj", "{FC1496E9-B6CA-425B-9567-70005E52D892}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
