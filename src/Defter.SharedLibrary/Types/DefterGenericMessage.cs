@@ -7,9 +7,15 @@ namespace Defter.SharedLibrary
 {
     public class DefterGenericMessage : CollectionModelBson
     {
+        /// <summary>
+        /// Encoded Xml Content (Soap Request Payload)
+        /// </summary>
         [PropertyDescriptor(EnableFilter = false)]
         public string RequestContent { get; set; }
 
+        /// <summary>
+        /// Encoded Xml Content (Soap Response Payload)
+        /// </summary>
         [PropertyDescriptor(EnableFilter = false)]
         public string ResponseContent { get; set; }
 

@@ -7,7 +7,7 @@
             <i style="float:left;" data-feather="activity" class="pink"></i>
         </div>
         <h3 class="brown">&nbsp;&nbsp;Activities</h3>
-    </div> 
+    </div>
     <div class="bd defter-box">
         @{
             var gridComponent = Html.Efe().Grid<DefterGenericMessage>()
@@ -32,23 +32,28 @@
     </div>
 
     <div id="detail" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-height:720px; overflow:scroll;">
             <span style="margin-right:5px;" class="close" onclick="closeModal()">&times;</span>
             <table class="table-container" style="width: 100%; height: 100%;">
                 <tr>
                     <td valign="top" style="width: 50%;">
-                        <div id="requestContent" data-bind="jsoneditor: requestContentComputed"></div>
+                        <pre>
+                        <code class="html" id="requestContent" data-bind="text: requestContentComputed"></code>
+                        </pre>
                     </td>
                     <td valign="top" style="width: 50%;">
-                        <div id="responseContent" data-bind="jsoneditor: responseContentComputed"></div>
+                        <pre>
+                        <code class="html" id="responseContent" data-bind="text: responseContentComputed"></code>
+                        </pre>
                     </td>
                 </tr>
             </table>
-        </div>        
+        </div>
     </div>
 </div>
 
-<script>
+@section scripts {
+    <script>
 
     var grid = {};
     var modal = document.getElementById("detail");
@@ -146,7 +151,7 @@
                 if (val) {
                     return atob(val);
                 } else {
-                    return "{}";
+                    return "";
                 }
             }, this);
             this.responseContentComputed = ko.computed(function () {
@@ -154,7 +159,7 @@
                 if (val) {
                     return atob(val);
                 } else {
-                    return "{}";
+                    return "";
                 }
             }, this);
             this.connect = function () {
@@ -221,4 +226,5 @@
         return;
     }
 
-</script>
+    </script>
+}
